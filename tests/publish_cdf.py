@@ -31,10 +31,10 @@ def now() -> int:
 
 def main():
     logging.basicConfig(level=logging.DEBUG)
-    logger.info("Starting Tussa edge simulator")
+    logger.info("Starting CDF payload publisher")
     client = mqtt_client("localhost", 1883)
 
-    topic = "data"
+    topic = "cdf"
     n = 10
 
     value = 1
@@ -43,11 +43,11 @@ def main():
         items = []
         for i in range(n):
             items.append({
-                "externalId": f"int{i}",
+                "externalId": f"cdf_int{i}",
                 "datapoints": [{"timestamp": t, "value": value}]
             })
             items.append({
-                "externalId": f"str{i}",
+                "externalId": f"cdf_str{i}",
                 "datapoints": [{"timestamp": t, "value": str(value)}]
             })
 

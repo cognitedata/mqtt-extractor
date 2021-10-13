@@ -22,10 +22,24 @@ Run a local MQTT service:
 
 Run the simulation publishing messages to the local MQTT service:
 
-    poetry run sim
+    poetry run publish_cdf
 
-Configure and run the extractor:
+Configure and run the extractor using the default CDF payload handler:
 
+    poetry run main config/config.yaml
+
+The module `tests.custom` can be used to handle a custom payload format with the following config:
+
+    subscriptions:
+        - topic: cdf
+            qos: 1
+            handler:
+                module: mqtt_extractor.cdf
+        - topic: custom
+            handler:
+                module: tests.custom
+
+    poetry run publish_custom
     poetry run main config/config.yaml
 
 ## Docker

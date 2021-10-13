@@ -5,7 +5,6 @@ logger = logging.getLogger(__name__)
 
 
 def parse(payload: bytes, topic: str):
-    logger.info("Payload type: %s", type(payload))
     msg = loads(payload)
     logger.debug("Message: %r %r", topic, msg)
     for item in msg["items"]:
