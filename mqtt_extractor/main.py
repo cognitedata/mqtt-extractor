@@ -1,10 +1,11 @@
+import importlib
 import logging
 import sys
 import time
-from dataclasses import dataclass
-from json import loads
-from threading import Event, Thread
-from typing import List, Optional, Union
+from dataclasses import dataclass, field
+from threading import Event
+from typing import List
+
 from cognite.client import CogniteClient
 from cognite.client.data_classes import ExtractionPipelineRun
 from cognite.extractorutils.configtools import (
@@ -12,10 +13,9 @@ from cognite.extractorutils.configtools import (
     load_yaml,
 )
 from cognite.extractorutils.uploader import TimeSeriesUploadQueue
-
 from paho.mqtt.client import Client as MqttClient
 
-from . import metrics, cdf
+from . import metrics
 
 logger = logging.getLogger(__name__)
 
@@ -30,10 +30,21 @@ class MqttConfig:
     clean_session: bool = False
 
 @dataclass
+class Handler:
+    module: str = "mqtt_extractor.cdf"
+    function: str = "parse"
+    package: str = None
+
+    def handler(self):
+        module = importlib.import_module(self.module, self.package)
+        return getattr(module, self.function)
+
+
+@dataclass
 class Subscription:
     topic: str
+    handler: Handler = field(default_factory=Handler)
     qos: int = 0
-    # message handler
 
 @dataclass
 class Config(BaseConfig):
@@ -55,6 +66,9 @@ def config_logging(config_file):
             logging.config.dictConfig(safe_load(f))
 
 
+_handlers = {}
+
+
 def on_connect(client, userdata, flags, rc):
     logger.info("Connection to MQTT server open")
     # logger.info("Flags %s", flags)
@@ -63,6 +77,9 @@ def on_connect(client, userdata, flags, rc):
         logger.warning("MQTT connection without session state")
     for subscription in config.subscriptions:
         logger.info("MQTT subscribe: %s", subscription)
+        handler = subscription.handler.handler()
+        _handlers[subscription.topic] = handler
+        # logger.info("Handler: %r %r", subscription.handler, handler)
         client.subscribe(subscription.topic, qos=subscription.qos)
 
 
@@ -158,7 +175,13 @@ def main():
                     len(message.payload),
                     repr(message.payload[:16]),
                 )
-                for ts_id, time_stamp, value in cdf.parse(message.payload, message.topic):
+
+                handle = _handlers.get(message.topic)
+                if not handle:
+                    logger.debug("Unhandled topic: %s", message.topic)
+                    return
+                    
+                for ts_id, time_stamp, value in handle(message.payload, message.topic):
 
                     logger.debug("Data point %s %d %r", ts_id, time_stamp, value)
                     external_id = config.cognite.external_id_prefix + ts_id
