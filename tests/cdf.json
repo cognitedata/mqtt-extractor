@@ -1,0 +1,11 @@
+{ 
+	"items": [
+		{
+			"externalId": "external-id",
+			"datapoints": [
+				{ "timestamp": 1001, "value": 1},
+				{ "timestamp": 1002, "value": 2}
+			]
+		}
+	]
+}

@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "mqtt-extractor"
+version = "0.1.0"
+description = "MQTT to CDF extractor"
+authors = ["Øystein Haug Olsen <oystein.olsen@cognite.com>"]
+
+
+[tool.poetry.dependencies]
+python = "^3.8"
+cognite-extractor-utils = "^1.5.3"
+paho-mqtt = "^1.5.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[tool.poetry.scripts]
+main = "mqtt_extractor.main:main"
+sim = "tests.simulator:main"
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"

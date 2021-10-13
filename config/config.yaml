@@ -1,0 +1,28 @@
+version: 1
+
+mqtt:
+  hostname: localhost
+  port: 1883
+  
+subscriptions:
+  - topic: data
+    qos: 1
+
+upload-interval: 1
+# status-interval: 60
+# status-pipeline: mqtt-extractor
+
+
+logger:
+  console:
+    level: DEBUG
+
+cognite:
+  host: https://api.cognitedata.com
+  project: xxx
+  idp-authentication:
+    authority: "https://login.microsoftonline.com/"
+    # tenant: xxx-xxx
+    # client-id: xxx-xxx
+    # secret: "xYzX"
+    scopes: [ "https://api.cognitedata.com/.default" ]

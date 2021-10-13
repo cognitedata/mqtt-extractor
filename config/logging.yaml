@@ -1,0 +1,21 @@
+version: 1
+disable_existing_loggers: False
+handlers:
+  console:
+    class: logging.StreamHandler
+    formatter: default
+    stream: ext://sys.stdout
+  file:
+    class: logging.handlers.TimedRotatingFileHandler
+    formatter: default
+    filename: logs/tocdf.log
+    when: midnight
+    backupCount: 3
+formatters:
+  default:
+    format: '%(asctime)s.%(msecs)03d %(levelname)-8s %(name)-22s %(message)s'
+    datefmt: '%Y-%m-%d %H:%M:%S'
+root:
+  level: DEBUG
+  handlers: [file, console]
+#loggers:
