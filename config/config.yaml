@@ -9,6 +9,9 @@ subscriptions:
     qos: 1
     handler:
       module: mqtt_extractor.cdf
+  - topic: custom
+    handler:
+      module: tests.custom
 
 upload-interval: 1
 # status-interval: 60

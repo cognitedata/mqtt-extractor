@@ -2,6 +2,8 @@
 
 Pushing data points and time series to CDF from a MQTT service.
 
+See the config directory for sample configuration.
+
 ## Development
 
 Install poetry:
