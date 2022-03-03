@@ -7,7 +7,7 @@ authors = ["Øystein Haug Olsen <oystein.olsen@cognite.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-cognite-extractor-utils = "^1.5.3"
+cognite-extractor-utils = "^2.1.0"
 paho-mqtt = "^1.5.1"
 
 [tool.poetry.dev-dependencies]
