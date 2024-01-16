@@ -5,7 +5,7 @@ mqtt:
   port: 1883
   
 subscriptions:
-  - topic: data
+  - topic: cdf
     qos: 1
     handler:
       module: mqtt_extractor.cdf
